@@ -14,7 +14,7 @@ Pasos para ejecutar el proyecto
 Clonar el repositorio
 
 bash
-git clone https://github.com/tu-usuario/calculadora-raices.git
+
 cd calculadora-raices
 Crear y activar entorno virtual (Windows)
 
