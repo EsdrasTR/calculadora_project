@@ -1,0 +1,104 @@
+{% extends 'metodos_numericos/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="text-center">Ingrese los datos del problema</h2>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.funcion.id_for_label }}" class="form-label">Función polinómica</label>
+                        {{ form.funcion }}
+                        <div class="form-text">Ejemplos: x**3 - 2*x - 5, x**2 - 2, exp(x) - 2</div>
+                        {{ form.funcion.errors }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.metodo.id_for_label }}" class="form-label">Método numérico</label>
+                        {{ form.metodo }}
+                        {{ form.metodo.errors }}
+                    </div>
+                    
+                    <div id="biseccion-fields">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.a.id_for_label }}" class="form-label">Extremo inferior (a)</label>
+                                    {{ form.a }}
+                                    {{ form.a.errors }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.b.id_for_label }}" class="form-label">Extremo superior (b)</label>
+                                    {{ form.b }}
+                                    {{ form.b.errors }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="newton-fields">
+                        <div class="mb-3">
+                            <label for="{{ form.x0.id_for_label }}" class="form-label">Valor inicial (x0)</label>
+                            {{ form.x0 }}
+                            {{ form.x0.errors }}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.tolerancia.id_for_label }}" class="form-label">Tolerancia (error permitido)</label>
+                                {{ form.tolerancia }}
+                                {{ form.tolerancia.errors }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.max_iter.id_for_label }}" class="form-label">Máximo número de iteraciones</label>
+                                {{ form.max_iter }}
+                                {{ form.max_iter.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">Calcular</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const metodoSelect = document.querySelector('#id_metodo');
+    const biseccionFields = document.querySelector('#biseccion-fields');
+    const newtonFields = document.querySelector('#newton-fields');
+    
+    function toggleFields() {
+        const metodo = metodoSelect.value;
+        
+        if (metodo === 'biseccion') {
+            biseccionFields.style.display = 'block';
+            newtonFields.style.display = 'none';
+        } else {
+            biseccionFields.style.display = 'none';
+            newtonFields.style.display = 'block';
+        }
+    }
+    
+    // Mostrar campos según el método seleccionado inicialmente
+    toggleFields();
+    
+    // Cambiar campos cuando se selecciona otro método
+    metodoSelect.addEventListener('change', toggleFields);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'metodos_numericos/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2>Resultados</h2>
+            </div>
+            <div class="card-body">
+                {% if error %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% else %}
+                    <h4>Función: {{ funcion }}</h4>
+                    <h4>Método: 
+                        {% if metodo == 'biseccion' %}Bisección
+                        {% elif metodo == 'newton' %}Newton-Raphson
+                        {% else %}Newton-Raphson Modificado
+                        {% endif %}
+                    </h4>
+                    <h4>Raíz aproximada: {{ raiz|floatformat:6 }}</h4>
+                    
+                    {% if imagen %}
+                        <div class="text-center my-4">
+                            <img src="data:image/png;base64,{{ imagen }}" alt="Gráfica de la función" class="img-fluid">
+                        </div>
+                    {% endif %}
+                    
+                    <h4 class="mt-4">Iteraciones:</h4>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Iteración</th>
+                                    {% if metodo == 'biseccion' %}
+                                        <th>a</th>
+                                        <th>b</th>
+                                        <th>c</th>
+                                        <th>f(c)</th>
+                                    {% else %}
+                                        <th>x_actual</th>
+                                        <th>f(x)</th>
+                                        <th>f'(x)</th>
+                                        <th>x_siguiente</th>
+                                    {% endif %}
+                                    <th>Error</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for iter in iteraciones %}
+                                    <tr>
+                                        <td>{{ iter.iteracion }}</td>
+                                        {% if metodo == 'biseccion' %}
+                                            <td>{{ iter.a|floatformat:6 }}</td>
+                                            <td>{{ iter.b|floatformat:6 }}</td>
+                                            <td>{{ iter.c|floatformat:6 }}</td>
+                                            <td>{{ iter.f_c|floatformat:6 }}</td>
+                                        {% else %}
+                                            <td>{{ iter.x_actual|floatformat:6 }}</td>
+                                            <td>{{ iter.f_x|floatformat:6 }}</td>
+                                            <td>{{ iter.f_derivada_x|floatformat:6 }}</td>
+                                            <td>{{ iter.x_siguiente|floatformat:6 }}</td>
+                                        {% endif %}
+                                        <td>{{ iter.error|floatformat:6 }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+                
+                <div class="text-center mt-4">
+                    <a href="{% url 'metodos_numericos:inicio' %}" class="btn btn-primary">Volver</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
